@@ -16,7 +16,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $pdo = Database::getInstance()->getConnection();
-$stmt = $pdo->prepare("SELECT * FROM prenotazioni WHERE id_utente = :id");
+$stmt = $pdo->prepare("SELECT * FROM prenotazioni WHERE id_utente = :id ORDER BY data_prenotazione");
 $stmt->execute(["id" => $_SESSION['user_id']]);
 $prenotazioni = $stmt->fetchAll();
 
@@ -39,15 +39,18 @@ $prenotazioni = $stmt->fetchAll();
 
 <div class="profilo">
     <p>Benvenuto, <?= $_SESSION['username'] ?>!</p>
+    <form method="post">
+        <button type="submit" name="logout">Logout</button>
+    </form>
 
     <?php if (isset($prenotazioni)): ?>
         <h4>Prenotazioni effettuate:</h4>
-        <ul>
+        <ul class="prenotazioni">
             <?php foreach ($prenotazioni as $prenotazione): ?>
 
                 <li class="singola-prenotazione">
-                    <a href="campi.php?id_campo=<?= $prenotazione['id_campo'] ?>">
-                        <?= $prenotazione['id_campo'] . " - " . $prenotazione['data_prenotazione'] ?>
+                    <a href="campi.php?id_campo=<?= $prenotazione['id_campo'] ?>" class="prenotazione-link">
+                        <?= $prenotazione['id_campo'] . " - " . date('d M Y', strtotime($prenotazione['data_prenotazione'])); ?>
                     </a>
                 </li>
 
@@ -58,9 +61,7 @@ $prenotazioni = $stmt->fetchAll();
     <?php endif; ?>
 
 
-    <form method="post">
-        <button type="submit" name="logout">Logout</button>
-    </form>
+
 </div>
 
 

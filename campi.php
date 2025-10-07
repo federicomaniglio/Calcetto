@@ -16,7 +16,7 @@ if (!$campo) {
 // Recupera TUTTE le prenotazioni per questo campo
 $stmt = $pdo->prepare("SELECT prenotazioni.*, utenti.username FROM prenotazioni 
                        INNER JOIN utenti ON prenotazioni.id_utente = utenti.id 
-                       WHERE prenotazioni.id_campo = :id_campo");
+                       WHERE prenotazioni.id_campo = :id_campo ORDER BY prenotazioni.data_prenotazione");
 $stmt->execute(["id_campo" => $_GET['id_campo']]);
 $prenotazioni = $stmt->fetchAll();
 

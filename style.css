@@ -62,9 +62,27 @@ div.prenotazioni {
 
 .profilo ul {
     list-style-type: none;
-    padding-left: 0;
+    padding: 0;
+    margin-top: 0px;
 }
 
 .singola-prenotazione{
     padding-top: 10px;
+}
+
+a.prenotazione-link{
+    text-decoration: none;
+    color: #007bff;
+}
+
+a.prenotazione-link:hover {
+    text-decoration: underline;
+    color: #003d7a;
+}
+
+h4{
+    text-align: center;
+    padding-top: 50px ;
+    padding-bottom: 0;
+    margin-bottom: 0;
 }
