@@ -45,6 +45,7 @@ $prenotazioni = $stmt->fetchAll();
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<?php include 'navigation.php'; ?>
 <div class="campo">
     <h1><?= $title ?></h1>
     <div class="box-immagine">

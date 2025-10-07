@@ -1,3 +1,5 @@
+
+
 <nav class="navbar">
     <ul class="nav-list">
         <li class="nav-item">
@@ -6,9 +8,15 @@
         <li class="nav-item">
             <a href="campi.php" class="nav-link">Campi</a>
         </li>
+        <?php if (isset($_SESSION['user_id'])): ?>
         <li class="nav-item">
             <a href="profilo.php" class="nav-link">Profilo</a>
         </li>
+        <?php else : ?>
+            <li class="nav-item">
+                <a href="login.php" class="nav-link">Login</a>
+            </li>
+        <?php endif; ?>
     </ul>
 </nav>
 <style>

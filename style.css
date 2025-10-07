@@ -38,4 +38,19 @@ div.prenotazioni {
 
 .error{
     color: red;
+    text-align: center;
+    margin: 0 auto;
+    width: fit-content;
+}
+
+.login-form {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.form-group {
+    margin-bottom: 15px;
 }

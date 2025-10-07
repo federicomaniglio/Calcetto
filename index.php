@@ -1,5 +1,10 @@
 <?php
 require_once 'database.php';
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 $title = "Calcetto"
 ?>
 
@@ -15,7 +20,7 @@ $title = "Calcetto"
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<?php include 'navigation.html' ?>
+<?php include 'navigation.php' ?>
 <h1><?= $title ?></h1>
 
 <?php
