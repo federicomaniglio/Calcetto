@@ -1,5 +1,6 @@
 <?php
-    $title = "Calcetto"
+require_once 'database.php';
+$title = "Calcetto"
 ?>
 
 
@@ -14,10 +15,39 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<?php include 'navigation.html' ?>
 <h1><?= $title ?></h1>
+
+<?php
+$pdo = Database::getInstance()->getConnection();
+
+$result = $pdo->query("SELECT * FROM campi ORDER BY capienza DESC");
+foreach ($result as $row) {
+    ?>
+    <hr>
+    <div class="campo">
+        <h3><?= htmlspecialchars($row['nome_campo']) ?></h3>
+        <div class="box-immagine">
+            <a href="campi.php?id_campo=<?= urlencode($row['nome_campo']) ?>">
+                <img src="<?= htmlspecialchars($row['foto_url']) ?>" 
+                     alt="<?= htmlspecialchars($row['nome_campo']) ?>">
+            </a>
+        </div>
+        <p><?= htmlspecialchars($row['capienza']) ?> persone</p>
+    </div>
+    <?php
+}
+
+?>
+<div>
+
+
+</div>
 
 
 </body>
 </html>
+
+
 
 
