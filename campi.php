@@ -1,20 +1,8 @@
 <?php
 require_once 'database.php';
 session_start();
-$errorePrenotazione = false;
-
-if (!empty($_POST)) {
-    $pdo = Database::getInstance()->getConnection();
-    $stmt = $pdo->prepare("INSERT INTO prenotazioni (id_utente, id_campo,  data_prenotazione) VALUES ( :id_utente, :id_campo, :data_prenotazione) ");
-    try {
-        $stmt->execute(["id_utente" => $_POST["id_utente"], "id_campo" => $_POST["id_campo"], "data_prenotazione" => $_POST["data_prenotazione"]]);
-    } catch (Exception $e) {
-        $errorePrenotazione = true;
-    }
-}
-
-
 $title = $_GET['id_campo'];
+
 $pdo = Database::getInstance()->getConnection();
 $stmt = $pdo->prepare("SELECT * FROM campi WHERE nome_campo = :nome_campo");
 $stmt->execute(["nome_campo" => $_GET['id_campo']]);
@@ -25,12 +13,32 @@ if (!$campo) {
     exit;
 }
 
-$stmt->closeCursor();
+// Recupera TUTTE le prenotazioni per questo campo
 $stmt = $pdo->prepare("SELECT prenotazioni.*, utenti.username FROM prenotazioni 
                        INNER JOIN utenti ON prenotazioni.id_utente = utenti.id 
                        WHERE prenotazioni.id_campo = :id_campo");
 $stmt->execute(["id_campo" => $_GET['id_campo']]);
 $prenotazioni = $stmt->fetchAll();
+
+if (isset($_SESSION['user_id'])) {
+    $errorePrenotazione = false;
+
+    if (!empty($_POST)) {
+        $stmt = $pdo->prepare("INSERT INTO prenotazioni (id_utente, id_campo, data_prenotazione) VALUES (:id_utente, :id_campo, :data_prenotazione)");
+        try {
+            $stmt->execute([
+                "id_utente" => $_POST["id_utente"], 
+                "id_campo" => $_POST["id_campo"], 
+                "data_prenotazione" => $_POST["data_prenotazione"]
+            ]);
+            // Ricarica le prenotazioni dopo l'inserimento
+            header("Location: campi.php?id_campo=" . urlencode($_GET['id_campo']));
+            exit;
+        } catch (Exception $e) {
+            $errorePrenotazione = true;
+        }
+    }
+}
 
 ?>
 
@@ -52,38 +60,38 @@ $prenotazioni = $stmt->fetchAll();
         <img src="<?= $campo['foto_url'] ?>" alt="<?= $title ?>">
     </div>
     <p>Capienza <?= $campo['capienza'] ?> persone</p>
-    <?php
-    if (count($prenotazioni) > 0) { ?>
+    
+    <?php if (count($prenotazioni) > 0): ?>
         <div class="prenotazioni">
             <h3>Prenotazioni</h3>
-            <?php foreach ($prenotazioni as $prenotazione) { ?>
-                <p> <?= $prenotazione['username'] . " - " . date('d M Y', strtotime($prenotazione['data_prenotazione'])); ?> </p>
-            <?php } ?>
+            <?php foreach ($prenotazioni as $prenotazione): ?>
+                <p>
+                    <?php if (isset($_SESSION['user_id']) && $prenotazione['id_utente'] == $_SESSION['user_id']): ?>
+                        <?= $prenotazione['username'] ?> - <?= date('d M Y', strtotime($prenotazione['data_prenotazione'])) ?>
+                    <?php else: ?>
+                        Prenotato - <?= date('d M Y', strtotime($prenotazione['data_prenotazione'])) ?>
+                    <?php endif; ?>
+                </p>
+            <?php endforeach; ?>
         </div>
-    <?php } ?>
-    <div class="form-prenotazione">
-        <h3>Prenota</h3>
-        <form method="post">
-            <input type="hidden" name="id_campo" value="<?= $_GET['id_campo'] ?>">
-            <label>
-                <select name="id_utente" required>
-                    <?php
-                    $stmt = $pdo->query("SELECT id, username FROM utenti");
-                    while ($utente = $stmt->fetch()) {
-                        echo "<option value='" . $utente['id'] . "'>" . $utente['username'] . "</option>";
-                    }
-                    ?>
-                </select>
-            </label>
-            <label>
-                <input type="date" name="data_prenotazione" required>
-            </label>
-            <input type="submit" value="Prenota">
-        </form>
-        <?php if ($errorePrenotazione)
-            echo "<p class = 'error'>Campo non disponibile per quel giorno</p>";
-        ?>
-    </div>
+    <?php endif; ?>
+    
+    <?php if (isset($_SESSION['user_id'])): ?>
+        <div class="form-prenotazione">
+            <h3>Prenota</h3>
+            <form method="post">
+                <input type="hidden" name="id_campo" value="<?= $_GET['id_campo'] ?>">
+                <input type="hidden" name="id_utente" value="<?= $_SESSION['user_id'] ?>">
+                <label>
+                    <input type="date" name="data_prenotazione" required>
+                </label>
+                <input type="submit" value="Prenota">
+            </form>
+            <?php if (isset($errorePrenotazione) && $errorePrenotazione): ?>
+                <p class="error">Campo non disponibile per quel giorno</p>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
 </div>
 </body>
 </html>
