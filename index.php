@@ -5,7 +5,11 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-$title = "Calcetto"
+$title = "Calcetto";
+
+$pdo = Database::getInstance()->getConnection();
+
+$result = $pdo->query("SELECT * FROM campi ORDER BY capienza DESC");
 ?>
 
 
@@ -24,9 +28,7 @@ $title = "Calcetto"
 <h1><?= $title ?></h1>
 
 <?php
-$pdo = Database::getInstance()->getConnection();
 
-$result = $pdo->query("SELECT * FROM campi ORDER BY capienza DESC");
 foreach ($result as $row) {
     ?>
     <hr>

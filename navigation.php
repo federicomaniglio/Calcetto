@@ -1,12 +1,8 @@
 
-
 <nav class="navbar">
     <ul class="nav-list">
         <li class="nav-item">
             <a href="index.php" class="nav-link">Home</a>
-        </li>
-        <li class="nav-item">
-            <a href="campi.php" class="nav-link">Campi</a>
         </li>
         <?php if (isset($_SESSION['user_id'])): ?>
         <li class="nav-item">

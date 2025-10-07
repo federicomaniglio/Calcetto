@@ -54,3 +54,17 @@ div.prenotazioni {
 .form-group {
     margin-bottom: 15px;
 }
+
+.profilo{
+    text-align: center;
+    font-size: 20px;
+}
+
+.profilo ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.singola-prenotazione{
+    padding-top: 10px;
+}

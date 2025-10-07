@@ -1,6 +1,6 @@
 <?php
 require_once 'database.php';
-
+session_start();
 $errorePrenotazione = false;
 
 if (!empty($_POST)) {
