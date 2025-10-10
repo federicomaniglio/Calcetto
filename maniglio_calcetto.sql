@@ -2,15 +2,19 @@ create database maniglio_calcetto;
 
 use maniglio_calcetto;
 
-create table utenti(
-                       id INT AUTO_INCREMENT PRIMARY KEY,
-                       username varchar(50) NOT NULL,
-                       nome varchar(50),
-                       cognome varchar(50)
+create table utenti
+(
+    id       INT AUTO_INCREMENT PRIMARY KEY,
+    username varchar(50)  NOT NULL,
+    password varchar(255) NOT NULL,
+    nome     varchar(50),
+    cognome  varchar(50)
 );
 
-insert into utenti values(null, "DJFede", "Federico","Maniglio");
-insert into utenti values(null, "acosta", "Alberto","Costa");
+insert into utenti
+values (null, "DJFede", "$2y$12$Ujg0apbAs0pDfd1z6Blq6OVzooHkkfFYMtqTN3.DUrQc0XnGOuYvG", "Federico", "Maniglio");
+insert into utenti
+values (null, "acosta", "$2y$12$Ujg0apbAs0pDfd1z6Blq6OVzooHkkfFYMtqTN3.DUrQc0XnGOuYvG", "Alberto", "Costa");
 
 create table campi(
                       nome_campo varchar(100) not null unique primary key,
